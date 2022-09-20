@@ -32,7 +32,7 @@ const Modal = ({ taskData, category, changeTable, setChangeTable, toggle, setTog
   return (
     <div className={(changeTable === '' ? "modal" : "modal active")}>
         <div className="modal__form">
-          <input placeholder="Name" name="Name" maxlength="20" value={task.Name} onChange={(e) => {handleChange(e)}} className="modal__form__input" />
+          <input placeholder="Name" name="Name" maxLength="20" value={task.Name} onChange={(e) => {handleChange(e)}} className="modal__form__input" />
           <select name="Category" value={task.Category} onChange={(e) => {handleChange(e)}}>
             {category.map((cat)=>{
               return (

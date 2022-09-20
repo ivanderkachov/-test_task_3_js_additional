@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 
-import { summary } from "../../redux/reducers/reducer";
+import { summary, getTasks } from "../../redux/reducers/reducer";
 import Table from "../../components/table/table";
 import Modal from "../../components/modal/modal";
 import "./main.css";
@@ -12,7 +13,8 @@ const Main = () => {
   const [changeTable, setChangeTable] = useState("");
 
   useEffect(() => {
-    dispatch(summary());
+    dispatch(summary())
+    dispatch(getTasks())
   }, [toggle]);
 
   const { taskData, taskDataArchive, taskDataSummary, category } = useSelector(
