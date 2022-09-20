@@ -1,4 +1,4 @@
-const taskData =  {
+let taskData =  {
     1662907031392: {
       id: 1662907031392,
       Name: "Shopping list",
@@ -24,7 +24,7 @@ const taskData =  {
       Dates: "",
     },
   }
-const taskDataArchive = {}
+let taskDataArchive = {}
 const category = ["Task", "Random thoughts", "Idea"];
 
 

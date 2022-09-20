@@ -1,11 +1,11 @@
-import axios from 'axios'
+import axios from "axios";
 
-const GET_TASKS = 'GET_TASKS'
+const GET_TASKS = "GET_TASKS";
 const ADD_TASK_TO_ARCHIVE = "ADD_TASK_TO_ARCHIVE";
 const UNARCHIVE_TASK = "UNARCHIVE_TASK";
 const DELETE_TASK = "DELETE_TASK";
 const ADD_TASK = "ADD_TASK";
-const SUMMARY = "SUMMARY"
+const SUMMARY = "SUMMARY";
 
 const category = ["Task", "Random thoughts", "Idea"];
 
@@ -38,7 +38,7 @@ const initialState = {
   },
   taskDataArchive: {},
   taskDataSummary: "",
-  category
+  category,
 };
 
 function getDates(str) {
@@ -58,9 +58,11 @@ function getDates(str) {
 }
 
 function sortData(data) {
-  return Object.keys(data).sort((a, b) => b - a).reduce((acc,rec) => {
-    return { ...acc, [rec]: data[rec] }
-  },{})
+  return Object.keys(data)
+    .sort((a, b) => b - a)
+    .reduce((acc, rec) => {
+      return { ...acc, [rec]: data[rec] };
+    }, {});
 }
 
 export default (state = initialState, action) => {
@@ -110,73 +112,90 @@ export default (state = initialState, action) => {
 
 export function getTasks() {
   return (dispatch) => {
-    return axios('api/v1/notes').then(({data}) => {
-      const newTaskData = data.taskData
-       dispatch({
-         type: GET_TASKS,
-         newTaskData,
-       });
-    })
-  }
+    return axios("api/v1/notes").then(({ data }) => {
+      const newTaskData = data.taskData;
+      dispatch({
+        type: GET_TASKS,
+        newTaskData,
+      });
+    });
+  };
 }
 
 export function summary() {
   return (dispatch) => {
-    return axios('api/v1/notes/stats').then(({data}) => {
-      const taskDataSummary = data.summaryAll
+    return axios("api/v1/notes/stats").then(({ data }) => {
+      const taskDataSummary = data.summaryAll;
       dispatch({
         type: SUMMARY,
-        taskDataSummary
+        taskDataSummary,
+      });
+    });
+  };
+}
+
+export function addTaskToArchive(taskId) {
+  return (dispatch) => {
+    return axios.patch(
+      `/api/v1/notes/${taskId}`,
+      { type: "archive" },
+      { headers: { "Content-type": "application/json" } }
+    ). then(({ data }) => {
+      const newTaskData = data.taskData
+      const newTaskDataArchive = data.taskDataArchive
+      dispatch({
+        type: ADD_TASK_TO_ARCHIVE,
+        newTaskData,
+        newTaskDataArchive,
       });
     })
   };
 }
 
-export function addTaskToArchive(taskId) {
-  return (dispatch, getState) => {
-    const {taskData, taskDataArchive} = getState().reducer
-    const newTaskDataArchive = { ...taskDataArchive, [taskId]: taskData[taskId]}
-    const newTaskData = taskData
-    delete newTaskData[taskId]
-    dispatch({
-      type: ADD_TASK_TO_ARCHIVE,
-      newTaskData,
-      newTaskDataArchive
-    })
-  }
-}
 export function unarchiveTask(taskId) {
-  return (dispatch, getState) => {
-    const {taskData, taskDataArchive} = getState().reducer
-    const newTaskData = { ...taskData, [taskId]: taskDataArchive[taskId]}
-    const newTaskDataArchive = taskDataArchive
-    delete newTaskDataArchive[taskId]
-    dispatch({
-      type: UNARCHIVE_TASK,
-      newTaskData,
-      newTaskDataArchive
+  return (dispatch) => {
+    return axios.patch(
+      `/api/v1/notes/${taskId}`,
+      { type: "unarchive" },
+      { headers: { "Content-type": "application/json" } }
+    ). then(({ data }) => {
+      const newTaskData = data.taskData
+      const newTaskDataArchive = data.taskDataArchive
+      dispatch({
+        type: UNARCHIVE_TASK,
+        newTaskData,
+        newTaskDataArchive,
+      });
     })
-  }
+  };
 }
+
 export function deleteTask(taskId) {
-  return (dispatch, getState) => {
-    const { taskData } = getState().reducer
-     const newTaskData = taskData;
-     delete newTaskData[taskId];
-     dispatch({
-       type: DELETE_TASK,
-       newTaskData
-     });
-  }
-}
-export function addTask(task) {
-  return (dispatch, getState) => {
-    const { taskData } = getState().reducer;
-    task.Dates = getDates(task.Content)
-    const newTaskData = { ...taskData, [task.id]: task}
-    dispatch({
-      type: ADD_TASK,
-      newTaskData
+  return (dispatch) => {
+    return axios.delete(`api/v1/notes/${taskId}`).then(({ data }) => {
+      const newTaskData = data.taskData;
+      dispatch({
+        type: DELETE_TASK,
+        newTaskData,
+      });
     });
+  };
+}
+
+export function addTask(task) {
+  return (dispatch) => {
+    return axios
+      .post(
+        "/api/v1/notes",
+        { task },
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then(({ data }) => {
+        const newTaskData = data.taskData;
+        dispatch({
+          type: ADD_TASK,
+          newTaskData,
+        });
+      });
   };
 }
