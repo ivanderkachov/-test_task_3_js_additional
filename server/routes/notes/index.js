@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 let { taskData, taskDataArchive, category } = require("../../data/data");
-const { getDates } = require("../../helpers/helpers");
+const { getDates } = require("../../helpers/helpers")
+const { validateTaskBody, validateTypeBody } = require("../../services/validation")
 
 router.get("/", (req, res) => {
   res.json({status: 'ok', taskData})
@@ -26,14 +27,14 @@ router.delete("/:id", async (req, res) => {
   res.json({ status: "ok", taskData });
 })
 
-router.post("/", async (req, res) => {
+router.post("/", validateTaskBody, async (req, res) => {
   const { task } = req.body
   task.Dates = await getDates(task.Content)
   taskData = await { ...taskData, [task.id]: task };
   res.json({ status: "ok", taskData });
 })
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", validateTypeBody, async (req, res) => {
   const { id } = req.params
   const { type } = req.body
   if (type === 'archive') {
