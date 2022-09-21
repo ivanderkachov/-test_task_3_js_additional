@@ -76,7 +76,9 @@ export function getTasks() {
       dispatch({
         type: GET_TASKS,
         newTaskData,
-      });
+      })
+    }).catch(err => {
+      alert(JSON.stringify(err.response.data));
     });
   };
 }
@@ -89,7 +91,9 @@ export function summary() {
         type: SUMMARY,
         taskDataSummary,
       });
-    });
+    }).catch(err => {
+      alert(JSON.stringify(err.response.data));
+    })
   };
 }
 
@@ -97,7 +101,7 @@ export function addTaskToArchive(taskId) {
   return (dispatch) => {
     return axios.patch(
       `/api/v1/notes/${taskId}`,
-      { type: "archive" },
+      { type: 'archive' },
       { headers: { "Content-type": "application/json" } }
     ). then(({ data }) => {
       const newTaskData = data.taskData
@@ -106,7 +110,9 @@ export function addTaskToArchive(taskId) {
         type: ADD_TASK_TO_ARCHIVE,
         newTaskData,
         newTaskDataArchive,
-      });
+      })
+    }).catch((err) => {
+      alert(JSON.stringify(err.response.data))
     })
   };
 }
@@ -125,6 +131,8 @@ export function unarchiveTask(taskId) {
         newTaskData,
         newTaskDataArchive,
       });
+    }).catch(err => {
+      alert(JSON.stringify(err.response.data));
     })
   };
 }
@@ -137,7 +145,9 @@ export function deleteTask(taskId) {
         type: DELETE_TASK,
         newTaskData,
       });
-    });
+    }).catch(err => {
+      alert(JSON.stringify(err.response.data));
+    })
   };
 }
 
@@ -155,6 +165,8 @@ export function addTask(task) {
           type: ADD_TASK,
           newTaskData,
         });
-      });
+      }).catch(err => {
+      alert(JSON.stringify(err.response.data));
+    })
   };
 }
