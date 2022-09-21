@@ -16,52 +16,44 @@ const initialState = {
   category,
 };
 
-function sortData(data) {
-  return Object.keys(data)
-    .sort((a, b) => b - a)
-    .reduce((acc, rec) => {
-      return { ...acc, [rec]: data[rec] };
-    }, {});
-}
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_TASKS: {
       return {
         ...state,
-        taskData: sortData(action.newTaskData),
+        taskData: action.newTaskData,
       };
     }
     case SUMMARY: {
       return {
         ...state,
-        taskDataSummary: sortData(action.taskDataSummary),
+        taskDataSummary: action.taskDataSummary,
       };
     }
     case ADD_TASK_TO_ARCHIVE: {
       return {
         ...state,
-        taskData: sortData(action.newTaskData),
-        taskDataArchive: sortData(action.newTaskDataArchive),
+        taskData: action.newTaskData,
+        taskDataArchive: action.newTaskDataArchive,
       };
     }
     case UNARCHIVE_TASK: {
       return {
         ...state,
-        taskData: sortData(action.newTaskData),
-        taskDataArchive: sortData(action.newTaskDataArchive),
+        taskData: action.newTaskData,
+        taskDataArchive: action.newTaskDataArchive,
       };
     }
     case ADD_TASK: {
       return {
         ...state,
-        taskData: sortData(action.newTaskData),
+        taskData: action.newTaskData,
       };
     }
     case DELETE_TASK: {
       return {
         ...state,
-        taskData: sortData(action.newTaskData),
+        taskData: action.newTaskData,
       };
     }
     default:

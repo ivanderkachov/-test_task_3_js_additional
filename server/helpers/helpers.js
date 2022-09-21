@@ -14,4 +14,12 @@ function getDates(str) {
   }
 }
 
-module.exports = { getDates }
+function sortData(data) {
+  return Object.keys(data)
+    .sort((a, b) => b - a)
+    .reduce((acc, rec) => {
+      return { ...acc, [rec]: data[rec] };
+    }, {});
+}
+
+module.exports = { getDates, sortData }

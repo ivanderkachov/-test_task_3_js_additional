@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
 let { taskData, taskDataArchive, category } = require("../../data/data");
-const { getDates } = require("../../helpers/helpers")
+const { getDates, sortData } = require("../../helpers/helpers")
 const { validateTaskBody, validateTypeBody } = require("../../services/validation")
 
 router.get("/", (req, res) => {
   try {
-    res.json({ status: "ok", taskData });
+    res.json({ status: "ok", taskData: sortData(taskData) });
   } catch (err) {
     res.json({ status: "ERROR", err });
   }
@@ -23,7 +23,7 @@ router.get("/stats", (req, res) => {
     const summaryAll = category.reduce((acc, rec) => {
       return { ...acc, [rec]: {Category: rec, Active: summaryTable[rec], Archived: summaryTableArchive[rec] }};
     }, {});
-  res.json({ status: "ok", summaryAll });
+  res.json({ status: "ok", summaryAll: sortData(summaryAll) });
   } catch (err) {
     res.json({ status: "ERROR", err });
   }
@@ -34,7 +34,7 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params
   try {
     await delete taskData[id];
-    res.json({ status: "ok", taskData });
+    res.json({ status: "ok", taskData: sortData(taskData) });
   } catch (err) {
     res.json({ status: "ERROR", err });
   }
@@ -46,7 +46,7 @@ router.post("/", validateTaskBody, async (req, res) => {
   try {
     task.Dates = await getDates(task.Content);
     taskData = await { ...taskData, [task.id]: task };
-    res.json({ status: "ok", taskData });
+    res.json({ status: "ok", taskData: sortData(taskData) });
   } catch (err) {
     res.json({ status: "ERROR", err });
   }
@@ -60,12 +60,12 @@ router.patch("/:id", validateTypeBody, async (req, res) => {
     if (type === "archive") {
       taskDataArchive = await { ...taskDataArchive, [id]: taskData[id] };
       await delete taskData[id];
-      res.json({ status: "ok", taskData, taskDataArchive });
+      res.json({ status: "ok", taskData: sortData(taskData), taskDataArchive: sortData(taskDataArchive) });
     }
     if (type === "unarchive") {
       taskData = await { ...taskData, [id]: taskDataArchive[id] };
       await delete taskDataArchive[id];
-      res.json({ status: "ok", taskData, taskDataArchive });
+      res.json({ status: "ok", taskData: sortData(taskData), taskDataArchive: sortData(taskDataArchive)});
     }
   } catch (err) {
     res.json({ status: "ERROR", err });

@@ -5,6 +5,7 @@ const taskSchema = Joi.object({
     id: Joi.number().required().unsafe(),
     Name: Joi.string().required(),
     Created: Joi.string().required(),
+    Category: Joi.string().required(),
     Content: Joi.string().required(),
     Dates: Joi.any(),
   },
