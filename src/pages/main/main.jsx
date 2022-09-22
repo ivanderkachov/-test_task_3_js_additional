@@ -9,12 +9,15 @@ import "./main.css";
 
 const Main = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState('')
   const [toggle, setToggle] = useState(false);
   const [changeTable, setChangeTable] = useState("");
 
   useEffect(() => {
+    setLoading(true)
     dispatch(summary())
     dispatch(getTasks())
+    setLoading(false)
   }, [toggle]);
 
   const { taskData, taskDataArchive, taskDataSummary, category } = useSelector(
@@ -27,6 +30,7 @@ const Main = () => {
   ];
   return (
     <>
+    {(loading) ? (<div>Loading...</div>):<div>
       <Modal
         taskData={taskData}
         category={category}
@@ -59,6 +63,7 @@ const Main = () => {
           );
         })}
       </div>
+      </div>}
     </>
   );
 };
