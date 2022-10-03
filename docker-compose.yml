@@ -3,10 +3,29 @@ version: '3.8'
 services:
   node_backend:
     container_name: node_backend
-    image: test_task:0.0.3
+    image: test_task:0.0.4
     build:
       context: .
     ports:
       - "8090:8090"
     environment:
       - PORT=8090
+      - PGDATABASE=notes_db
+      - PGUSER=user1
+      - PGPASSWORD=12345
+      - PGHOST=node_db
+    depends_on:
+      - node_db
+  node_db:
+    container_name: node_db
+    image: "postgres:14"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user1
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=notes_db
+    volumes:
+      - nps_data:/var/lib/postgresql/data
+volumes:
+  nps_data: {}
