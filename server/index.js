@@ -28,24 +28,6 @@ app.get("/", (req, res) => {
   );
 });
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../build")));
-//   app.get("/", (req, res) => {
-//     res.sendFile(
-//       path.join(__dirname, "../build", "../build/index.html"),
-//       function (err) {
-//         if (err) {
-//           res.status(500).send(err);
-//         }
-//       }
-//     );
-//   });
-// } else {
-//   app.get("/", (req, res) => {
-//     res.json("Server up and running");
-//   });
-// }
-
 (async () => {
   try {
     await sequelize.sync({
